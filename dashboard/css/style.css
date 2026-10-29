@@ -1,0 +1,26 @@
+/* Custom styling for AirVent Dashboard */
+
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+}
+
+.fan-spinning {
+    animation: spin-slow 1s linear infinite !important;
+}
+
+/* Card glassmorphism subtle reflection */
+.glass-panel {
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
