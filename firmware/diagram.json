@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp1", "top": 273.6, "left": 172.8, "attrs": {} },
+    { "type": "wokwi-gas-sensor", "id": "gas1", "top": 153.6, "left": 372.8, "attrs": {} },
+    { "type": "wokwi-ds18b20", "id": "ds1", "top": 393.6, "left": 432.8, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 333.6,
+      "left": 512.8,
+      "attrs": { "value": "4700" }
+    },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 533.6, "left": 292.8, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 603.6,
+      "left": 472.8,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 653.6,
+      "left": 572.8,
+      "attrs": { "color": "green" }
+    }
+  ],
+  "connections": [
+    [ "gas1:VCC", "esp1:3V3", "red", [] ],
+    [ "gas1:GND", "esp1:GND.1", "black", [] ],
+    [ "gas1:AOUT", "esp1:D34", "orange", [] ],
+    [ "ds1:VCC", "esp1:3V3", "red", [] ],
+    [ "ds1:GND", "esp1:GND.1", "black", [] ],
+    [ "ds1:DQ", "esp1:D4", "yellow", [] ],
+    [ "r1:1", "ds1:DQ", "yellow", [] ],
+    [ "r1:2", "ds1:VCC", "red", [] ],
+    [ "relay1:VCC", "esp1:VIN", "red", [] ],
+    [ "relay1:GND", "esp1:GND.2", "black", [] ],
+    [ "relay1:IN", "esp1:D26", "green", [] ],
+    [ "relay1:COM", "esp1:3V3", "red", [] ],
+    [ "relay1:NO", "r2:1", "blue", [] ],
+    [ "r2:2", "led1:A", "blue", [] ],
+    [ "led1:C", "esp1:GND.3", "black", [] ]
+  ],
+  "dependencies": {}
+}

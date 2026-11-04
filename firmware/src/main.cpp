@@ -2,7 +2,7 @@
 #include "config.h"
 #include "sensors.h"
 #include "fan_control.h"
-#include "network.h"
+#include "airvent_net.h"
 
 static unsigned long lastSensorRead = 0;
 static unsigned long lastTelemetryPublish = 0;
@@ -12,10 +12,11 @@ static FanStatus currentFanStatus;
 
 void setup() {
     Serial.begin(115200);
-    delay(1000);
+    delay(500);
     Serial.println("\n==========================================");
     Serial.println("  AirVent: Sistem Exhaust Fan Otomatis   ");
-    Serial.println("  Monitoring Suhu & Kualitas Udara ESP32  ");
+    Serial.println("  Monitoring Suhu (DS18B20) & Gas (MQ-135)");
+    Serial.println("  Terintegrasi Wokwi & Web Dashboard Live ");
     Serial.println("==========================================\n");
 
     pinMode(PIN_LED_STATUS, OUTPUT);
@@ -26,7 +27,7 @@ void setup() {
     initSensors();
     initNetwork();
 
-    digitalWrite(PIN_LED_STATUS, HIGH); // Indikator setup selesai
+    digitalWrite(PIN_LED_STATUS, HIGH); // LED indikator setup selesai
 }
 
 void loop() {
@@ -41,11 +42,10 @@ void loop() {
 
         currentSensorData = readSensors();
         
-        // Tampilkan log ke Serial Monitor
+        // Tampilkan log pembacaan
         if (currentSensorData.isValid) {
-            Serial.printf("[DATA] Suhu: %.1f°C | Kelembaban: %.1f%% | Gas: %.1f PPM | Status: %s\n",
+            Serial.printf("[SENSOR DATA] Suhu: %.1f°C | Gas: %.1f PPM | Udara: %s\n",
                           currentSensorData.temperature,
-                          currentSensorData.humidity,
                           currentSensorData.gasPpm,
                           currentSensorData.airQualityText);
         }
@@ -54,7 +54,7 @@ void loop() {
         currentFanStatus = updateFanAutomatic(currentSensorData);
     }
 
-    // 3. Kirim Telemetry ke Cloud/MQTT Broker
+    // 3. Kirim Telemetry ke MQTT Broker
     if (currentMillis - lastTelemetryPublish >= TELEMETRY_PUBLISH_MS) {
         lastTelemetryPublish = currentMillis;
 
@@ -63,4 +63,3 @@ void loop() {
         }
     }
 }
-

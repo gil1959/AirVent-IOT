@@ -1,22 +1,23 @@
 #include "sensors.h"
 #include "config.h"
-#include <DHT.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
-static DHT dht(PIN_DHT, DHT_TYPE);
+static OneWire oneWire(PIN_DS18B20);
+static DallasTemperature dsSensors(&oneWire);
 
 void initSensors() {
-    Serial.println("[SENSOR] Menginisialisasi sensor DHT dan MQ-135...");
-    dht.begin();
+    Serial.println("[SENSOR] Menginisialisasi sensor DS18B20 & Gas MQ-135 (Wokwi)...");
+    dsSensors.begin();
     pinMode(PIN_MQ135, INPUT);
-    // Beri jeda sejenak untuk stabilisasi sensor
-    delay(1000);
-    Serial.println("[SENSOR] Sensor siap digunakan.");
+    delay(500);
+    Serial.println("[SENSOR] Sensor DS18B20 & MQ-135 siap digunakan.");
 }
 
 AirQualityCategory evaluateAirQuality(float ppm) {
-    if (ppm < 200.0f) {
+    if (ppm < 220.0f) {
         return AIR_GOOD;
-    } else if (ppm <= AQI_THRESHOLD_POOR) {
+    } else if (ppm < AQI_THRESHOLD_POOR) {
         return AIR_MODERATE;
     } else {
         return AIR_POOR;
@@ -36,26 +37,26 @@ SensorData readSensors() {
     SensorData data;
     data.isValid = false;
 
-    // Membaca suhu dan kelembaban dari sensor DHT
-    float temp = dht.readTemperature();
-    float hum = dht.readHumidity();
+    // Membaca suhu dari sensor DS18B20 (Wokwi)
+    dsSensors.requestTemperatures();
+    float temp = dsSensors.getTempCByIndex(0);
 
-    if (isnan(temp) || isnan(hum)) {
-        Serial.println("[SENSOR ERROR] Gagal membaca data dari sensor DHT!");
-        data.temperature = 0.0f;
-        data.humidity = 0.0f;
+    if (temp == DEVICE_DISCONNECTED_C || temp < -55.0f || temp > 125.0f) {
+        Serial.println("[SENSOR WARNING] Gagal membaca DS18B20, menggunakan nilai acuan 28.0°C");
+        data.temperature = 28.0f;
     } else {
         data.temperature = temp;
-        data.humidity = hum;
         data.isValid = true;
     }
+
+    // Baseline estimasi kelembaban ruangan (~60%) agar kartu & chart kelembaban di web dashboard tetap aktif
+    data.humidity = 60.0f;
 
     // Membaca nilai analog dari sensor MQ-135 (Rentang ADC ESP32: 0 - 4095)
     int rawGas = analogRead(PIN_MQ135);
     data.rawGasValue = rawGas;
 
-    // Perhitungan estimasi PPM gas (skala proporsional sederhana untuk demonstrasi)
-    // Untuk pengukuran presisi, lakukan kalibrasi resistansi sensor (Rs/Ro) di docs/calibration_guide.md
+    // Mapping nilai ADC ke skala estimasi PPM (50 - 1000 PPM)
     float estimatedPpm = map(rawGas, 0, 4095, 50, 1000);
     data.gasPpm = estimatedPpm;
 
@@ -64,4 +65,3 @@ SensorData readSensors() {
 
     return data;
 }
-

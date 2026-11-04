@@ -4,42 +4,41 @@
 #include <Arduino.h>
 
 // ==================== KONFIGURASI WIFI ====================
-#define WIFI_SSID           "NAMA_WIFI_ANDA"
-#define WIFI_PASSWORD       "PASSWORD_WIFI_ANDA"
+// Wokwi WiFi simulation menggunakan "Wokwi-GUEST" tanpa password
+#define WIFI_SSID           "Wokwi-GUEST"
+#define WIFI_PASSWORD       ""
 
 // ==================== KONFIGURASI MQTT BROKER ====================
-// Contoh broker publik (dapat diganti EMQX, HiveMQ, Mosquitto lokal, atau Adafruit IO)
+// Selaras dengan Web Dashboard (EMQX Public Broker)
 #define MQTT_BROKER         "broker.emqx.io"
 #define MQTT_PORT           1883
-#define MQTT_CLIENT_ID      "AirVent-ESP32-Client"
-#define MQTT_TOPIC_DATA     "airvent/telemetry"       // Topik publikasi sensor
+#define MQTT_CLIENT_ID      "AirVent-ESP32-Wokwi"
+#define MQTT_TOPIC_DATA     "airvent/telemetry"       // Topik publikasi telemetry sensor
 #define MQTT_TOPIC_STATUS   "airvent/fan/status"      // Topik status kipas
-#define MQTT_TOPIC_CONTROL  "airvent/fan/control"     // Topik kontrol manual (ON/OFF/AUTO)
+#define MQTT_TOPIC_CONTROL  "airvent/fan/control"     // Topik kontrol manual dari Web Dashboard
 
 // ==================== KONFIGURASI PINOUT GPIO ====================
-#define PIN_DHT             4        // GPIO4 untuk DHT11 / DHT22 Data
-#define DHT_TYPE            DHT22    // DHT11 atau DHT22
+// Sesuai dengan diagram.json Wokwi (Tanpa mengubah rangkaian)
+#define PIN_DS18B20         4        // GPIO4 untuk Sensor Suhu DS18B20 (OneWire)
+#define PIN_MQ135           34       // GPIO34 (ADC1) untuk Sensor Gas MQ-135
+#define PIN_RELAY_FAN       26       // GPIO26 untuk Modul Relay Exhaust Fan
+#define PIN_LED_STATUS      2        // GPIO2 untuk LED status ESP32
 
-#define PIN_MQ135           34       // GPIO34 (ADC1) untuk pin Analog MQ-135
-#define PIN_RELAY_FAN       18       // GPIO18 untuk sinyal Relay Exhaust Fan
-#define PIN_LED_STATUS      2        // GPIO2 untuk LED indikator onboard ESP32
-
-// Aktifasi Relay: kebanyakan modul relay aktif LOW (LOW = Relay ON)
-#define RELAY_ACTIVE_LEVEL  LOW
-#define RELAY_INACTIVE_LEVEL HIGH
+// Aktifasi Relay Wokwi: Sinyal HIGH menghubungkan COM (3.3V) ke NO menyalakan LED hijau
+#define RELAY_ACTIVE_LEVEL   HIGH
+#define RELAY_INACTIVE_LEVEL LOW
 
 // ==================== BATAS AMBANG (THRESHOLDS) ====================
 // Suhu dalam derajat Celcius
-#define TEMP_THRESHOLD_HIGH     30.0f  // Jika suhu > 30°C, exhaust fan otomatis ON
-#define TEMP_HYSTERESIS         1.5f   // Kipas mati jika suhu turun ke (30.0 - 1.5) = 28.5°C
+#define TEMP_THRESHOLD_HIGH     30.0f  // Jika suhu >= 30°C, exhaust fan otomatis ON
+#define TEMP_HYSTERESIS         1.5f   // Kipas mati jika suhu turun ke <= (30.0 - 1.5) = 28.5°C
 
-// Kualitas Udara (PPM perkiraan gas / CO2)
-#define AQI_THRESHOLD_POOR      350    // Di atas batas ini, udara dianggap tercemar/kurang sehat
-#define AQI_HYSTERESIS          30     // Kipas mati jika PPM turun ke (350 - 30) = 320
+// Kualitas Udara (PPM gas / CO2 dari sensor MQ-135)
+#define AQI_THRESHOLD_POOR      350    // Ambang batas udara buruk / tercemar
+#define AQI_HYSTERESIS          30     // Kipas mati jika PPM turun ke <= (350 - 30) = 320
 
-// Interval pembacaan sensor dan publikasi telemetry (dalam milidetik)
-#define SENSOR_READ_INTERVAL_MS 2000   // Baca sensor setiap 2 detik
-#define TELEMETRY_PUBLISH_MS    3000   // Kirim telemetry setiap 3 detik
+// Interval pembacaan sensor dan pengiriman telemetry (milidetik)
+#define SENSOR_READ_INTERVAL_MS 2000   // Pembacaan sensor setiap 2 detik
+#define TELEMETRY_PUBLISH_MS    2000   // Publikasi ke Dashboard setiap 2 detik
 
 #endif // CONFIG_H
-

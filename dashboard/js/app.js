@@ -287,11 +287,16 @@ function connectMqtt() {
     mqttClient.onMessageArrived = (message) => {
         try {
             const data = JSON.parse(message.payloadString);
-            state.temperature = data.temperature ?? state.temperature;
+            console.log("[MQTT IN] Data diterima dari Wokwi/ESP32:", data);
+            state.temperature = data.temperature ?? data.temp ?? state.temperature;
             state.humidity = data.humidity ?? state.humidity;
-            state.gasPpm = data.gasPpm ?? state.gasPpm;
-            state.fanState = data.fanState ?? state.fanState;
-            state.fanMode = data.fanMode ?? state.fanMode;
+            state.gasPpm = data.gasPpm ?? (data.idx !== undefined ? data.idx * 10 : state.gasPpm);
+            if (data.fanState !== undefined) {
+                state.fanState = data.fanState;
+            } else if (data.fan !== undefined) {
+                state.fanState = data.fan === 1 ? "ON" : "OFF";
+            }
+            state.fanMode = data.fanMode ?? data.mode ?? state.fanMode;
             state.reason = data.reason ?? state.reason;
             updateUI();
         } catch (e) {
@@ -301,18 +306,18 @@ function connectMqtt() {
 
     mqttClient.connect({
         useSSL: true,
-        timeout: 5,
+        timeout: 8,
         onSuccess: () => {
             isSimulationMode = false;
             clearInterval(simulationInterval);
 
             indicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-            connText.innerText = "Live MQTT Terhubung";
+            connText.innerText = "Live MQTT Terhubung (Wokwi / ESP32)";
             toggleBtn.innerText = "Beralih ke Simulasi";
 
             mqttClient.subscribe(CONFIG.topicTelemetry);
             mqttClient.subscribe(CONFIG.topicStatus);
-            console.log("[MQTT] Berhasil terhubung & subscribe topik!");
+            console.log("[MQTT] Berhasil terhubung & subscribe topik:", CONFIG.topicTelemetry, CONFIG.topicStatus);
         },
         onFailure: (err) => {
             console.error("[MQTT FAIL]", err);

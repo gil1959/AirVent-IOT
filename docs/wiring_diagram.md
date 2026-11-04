@@ -1,6 +1,6 @@
-# Panduan Skema Rangkaian (Wiring Diagram) AirVent
+# Panduan Skema Rangkaian (Wiring Diagram) AirVent (Wokwi & Hardware)
 
-Dokumen ini menjelaskan koneksi perkabelan antara **ESP32**, **Sensor Suhu (DHT22/DHT11)**, **Sensor Gas Kualitas Udara (MQ-135)**, **Modul Relay**, dan **Exhaust Fan**.
+Dokumen ini menjelaskan koneksi perkabelan antara **ESP32**, **Sensor Suhu (DS18B20 OneWire)**, **Sensor Gas Kualitas Udara (MQ-135)**, **Modul Relay**, dan **Exhaust Fan / LED Indikator**.
 
 ---
 
@@ -8,16 +8,17 @@ Dokumen ini menjelaskan koneksi perkabelan antara **ESP32**, **Sensor Suhu (DHT2
 
 | Komponen | Pin Komponen | Pin ESP32 | Keterangan Tegangan |
 |---|---|---|---|
-| **Sensor DHT22 / DHT11** | VCC | 3.3V / 5V | Hubungkan ke 3.3V ESP32 (disarankan DHT22) |
+| **Sensor Suhu DS18B20** | VCC | 3.3V | Tegangan kerja sensor suhu digital |
 | | GND | GND | Ground bersama (Common Ground) |
-| | DATA | **GPIO 4** | Pasang pull-up resistor 4.7kΩ - 10kΩ ke VCC jika modul belum memilikinya |
-| **Sensor MQ-135** | VCC | 5V (VIN) | MQ-135 membutuhkan pemanas internal 5V |
+| | DQ (Data) | **GPIO 4** | Pasang pull-up resistor 4.7kΩ ke 3.3V |
+| **Sensor MQ-135** | VCC | 3.3V / 5V (VIN) | Suplai daya sensor gas |
 | | GND | GND | Ground bersama |
-| | A0 (Analog Out) | **GPIO 34** | Pin ADC1 ESP32 (Hanya input analog) |
-| | D0 (Digital Out)| *Tidak digunakan*| Bisa dibiarkan kosong |
-| **Modul Relay 5V** | VCC | 5V (VIN) | Suplai koil relay |
+| | AOUT (Analog Out) | **GPIO 34** | Pin ADC1 ESP32 (Input analog) |
+| **Modul Relay Exhaust Fan** | VCC | 5V (VIN) | Suplai koil relay |
 | | GND | GND | Ground bersama |
-| | IN (Sinyal) | **GPIO 18** | Mengendalikan saklar relay (Active LOW) |
+| | IN (Sinyal Kendali) | **GPIO 26** | Mengendalikan saklar relay (Active HIGH di Wokwi) |
+| | COM | 3.3V / Daya Fan | Terminal Common saklar |
+| | NO (Normally Open) | Kipas / LED | Tersambung saat relay aktif |
 | **LED Indikator Onboard** | - | **GPIO 2** | Internal LED status sistem |
 
 ---

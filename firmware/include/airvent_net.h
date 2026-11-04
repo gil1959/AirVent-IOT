@@ -1,5 +1,5 @@
-#ifndef NETWORK_H
-#define NETWORK_H
+#ifndef AIRVENT_NET_H
+#define AIRVENT_NET_H
 
 #include <Arduino.h>
 #include "sensors.h"
@@ -7,9 +7,11 @@
 
 void initNetwork();
 void handleNetworkLoop();
+void reconnectMqtt();
 bool isNetworkConnected();
+
 void publishTelemetry(const SensorData& sensorData, const FanStatus& fanStatus);
 void publishFanStatus(const FanStatus& fanStatus);
 
-#endif // NETWORK_H
+#endif // AIRVENT_NET_H
 
