@@ -24,6 +24,11 @@
 #define PIN_RELAY_FAN       26       // GPIO26 untuk Modul Relay Exhaust Fan
 #define PIN_LED_STATUS      2        // GPIO2 untuk LED status ESP32
 
+// ==================== PIN TAMBAHAN DEMO (BLOCKING vs NON-BLOCKING) ====================
+#define PIN_BUTTON_TEST     19       // GPIO19 untuk Push Button Uji Respons Kipas
+#define PIN_SWITCH_MODE     18       // GPIO18 untuk Switch Pemilih Mode (LOW=Blocking, HIGH=Non-Blocking)
+#define PIN_LED_HEARTBEAT   23       // GPIO23 untuk LED Heartbeat (indikator CPU beku/lancar)
+
 // Aktifasi Relay Wokwi: Sinyal HIGH menghubungkan COM (3.3V) ke NO menyalakan LED hijau
 #define RELAY_ACTIVE_LEVEL   HIGH
 #define RELAY_INACTIVE_LEVEL LOW

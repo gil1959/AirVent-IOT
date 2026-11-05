@@ -25,7 +25,35 @@
       "id": "led1",
       "top": 653.6,
       "left": 572.8,
-      "attrs": { "color": "green" }
+      "attrs": { "color": "green", "label": "Exhaust Fan" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 450,
+      "left": 30,
+      "attrs": { "color": "red", "label": "Push Button Uji Respons" }
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "sw1",
+      "top": 320,
+      "left": 40,
+      "attrs": { "label": "Switch Mode (Blocking/Non-Blocking)" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 540,
+      "left": 70,
+      "attrs": { "value": "220" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": 600,
+      "left": 70,
+      "attrs": { "color": "blue", "label": "LED Heartbeat CPU" }
     }
   ],
   "connections": [
@@ -43,7 +71,14 @@
     [ "relay1:COM", "esp1:3V3", "red", [] ],
     [ "relay1:NO", "r2:1", "blue", [] ],
     [ "r2:2", "led1:A", "blue", [] ],
-    [ "led1:C", "esp1:GND.3", "black", [] ]
+    [ "led1:C", "esp1:GND.3", "black", [] ],
+    [ "btn1:1.l", "esp1:D19", "purple", [] ],
+    [ "btn1:2.l", "esp1:GND.1", "black", [] ],
+    [ "sw1:2", "esp1:D18", "orange", [] ],
+    [ "sw1:1", "esp1:GND.1", "black", [] ],
+    [ "r3:1", "esp1:D23", "cyan", [] ],
+    [ "r3:2", "led2:A", "cyan", [] ],
+    [ "led2:C", "esp1:GND.1", "black", [] ]
   ],
   "dependencies": {}
 }

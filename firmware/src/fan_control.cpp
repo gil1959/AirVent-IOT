@@ -41,6 +41,15 @@ void setFanMode(FanMode mode) {
     }
 }
 
+void toggleFanState(const char* reason) {
+    setFanMode(FAN_MODE_MANUAL);
+    if (currentStatus.state == FAN_STATE_ON) {
+        setFanState(FAN_STATE_OFF, reason);
+    } else {
+        setFanState(FAN_STATE_ON, reason);
+    }
+}
+
 FanStatus updateFanAutomatic(const SensorData& data) {
     // Abaikan otomatisasi jika dalam mode manual (override pengguna)
     if (currentStatus.mode == FAN_MODE_MANUAL) {

@@ -23,6 +23,7 @@ struct FanStatus {
 void initFanControl();
 void setFanState(FanState state, const char* reason = "Manual Override");
 void setFanMode(FanMode mode);
+void toggleFanState(const char* reason = "Tombol Manual");
 FanStatus updateFanAutomatic(const SensorData& data);
 FanStatus getFanStatus();
 
