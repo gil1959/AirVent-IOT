@@ -30,4 +30,3 @@ Daftar ini mengikuti berkas simulasi yang ada, bukan laporan pengujian perangkat
 ## Pengembangan berikutnya
 
 Foto perakitan, skema tambahan, dan daftar komponen perangkat fisik dapat disimpan di folder ini ketika tersedia. Dokumentasi teknis umum tetap berada di folder `docs/`.
-

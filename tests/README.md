@@ -46,4 +46,3 @@ Checklist di atas adalah panduan verifikasi, bukan pernyataan bahwa seluruh angg
 ## Batas pemeriksaan
 
 Penambahan dokumentasi ini tidak membuktikan keberhasilan build, simulasi, atau pengujian perangkat keras. Pengujian fungsional mengikuti [panduan proyek](../README.md) dan [panduan demonstrasi yang tersedia](../docs/demo_blocking_nonblocking.md).
-
