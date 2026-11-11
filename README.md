@@ -26,6 +26,7 @@ Sistem ventilasi pintar (*Smart Exhaust Fan*) berbasis Internet of Things (IoT) 
 ```text
 airvent/
 ├── diagram.json                    # Skema rangkaian simulator Wokwi
+├── platformio.ini                 # Konfigurasi build dari root proyek
 ├── wokwi.toml                      # Konfigurasi binary firmware Wokwi
 ├── firmware/                       # Source code mikroprosesor ESP32
 │   ├── diagram.json                # Skema Wokwi untuk folder firmware
@@ -35,12 +36,12 @@ airvent/
 │   │   ├── config.h               # Pinout (DS18B20 GPIO4, MQ-135 GPIO34, Relay GPIO26)
 │   │   ├── sensors.h              # Definisi fungsi sensor DS18B20 & MQ-135
 │   │   ├── fan_control.h          # Definisi logika kendali exhaust fan & histeresis
-│   │   └── network.h              # Komunikasi WiFi & MQTT (PubSubClient)
+│   │   └── airvent_net.h              # Komunikasi WiFi & MQTT (PubSubClient)
 │   └── src/
 │       ├── main.cpp               # Alur program utama ESP32 (setup & loop)
 │       ├── sensors.cpp            # Pembacaan DS18B20 OneWire & konversi PPM MQ-135
 │       ├── fan_control.cpp        # Logika aktuator Relay/LED indikator
-│       └── network.cpp            # Pengiriman telemetry real-time & penerima perintah
+│       └── airvent_net.cpp            # Pengiriman telemetry real-time & penerima perintah
 ├── dashboard/                     # Web Dashboard Monitoring Real-Time
 │   ├── index.html                 # Halaman utama visualisasi data & kontrol
 │   ├── css/
@@ -49,9 +50,16 @@ airvent/
 │       └── app.js                 # Logika interaktif data, grafik, & kontrol fan via MQTT WS
 ├── docs/                          # Dokumentasi Teknis
 │   ├── wiring_diagram.md          # Skema sambungan pin (pinout wiring)
+│   ├── demo_blocking_nonblocking.md # Panduan demonstrasi respons tombol
 │   └── calibration_guide.md       # Panduan kalibrasi sensor gas MQ-135
+├── hardware/                      # Referensi komponen dan rangkaian simulasi
+│   └── README.md
+├── tests/                         # Panduan pemeriksaan repositori
+│   └── README.md
 └── .gitignore
 ```
+
+Lima folder utama proyek adalah `firmware/`, `dashboard/`, `docs/`, `hardware/`, dan `tests/`. Rincian rangkaian tersedia di [hardware](hardware/README.md), sedangkan langkah pemeriksaan struktur dan riwayat commit tersedia di [tests](tests/README.md).
 
 ---
 
@@ -82,4 +90,3 @@ airvent/
 3. Status koneksi akan berubah menjadi **"Live MQTT Terhubung (Wokwi / ESP32)"**.
 4. Grafik dan kartu metrik (Suhu, Gas PPM, dan Status Fan) akan langsung ter-update secara *real-time* mengikuti perubahan slider di Wokwi!
 5. Anda juga dapat menguji tombol **Fan ON**, **Fan OFF**, atau **Auto** di dashboard — relay dan lampu LED hijau di simulator Wokwi akan langsung merespons seketika.
-
