@@ -20,6 +20,9 @@ Dokumen ini menjelaskan koneksi perkabelan antara **ESP32**, **Sensor Suhu (DS18
 | | COM | 3.3V / Daya Fan | Terminal Common saklar |
 | | NO (Normally Open) | Kipas / LED | Tersambung saat relay aktif |
 | **LED Indikator Onboard** | - | **GPIO 2** | Internal LED status sistem |
+| **Push Button Uji Respons** | Kaki 1 | **GPIO 19** | PIN_BUTTON_TEST — kaki lain ke GND |
+| **Slide Switch Pemilih Mode** | Pin sinyal | **GPIO 18** | PIN_SWITCH_MODE — pin lain ke GND (LOW = Blocking, HIGH = Non-Blocking) |
+| **LED Biru Heartbeat** | Anoda | **GPIO 23** | PIN_LED_HEARTBEAT — melalui resistor 220 Ω ke GND |
 
 ---
 
@@ -53,6 +56,6 @@ Dokumen ini menjelaskan koneksi perkabelan antara **ESP32**, **Sensor Suhu (DS18
 ---
 
 ## 💡 Tips & Catatan Hardware
-1. **Pull-Up Resistor DHT**: Kebanyakan modul DHT yang sudah berada di PCB breakout sudah memiliki resistor pull-up bawaan. Jika menggunakan sensor lepasan (4 kaki), tambahkan resistor 10kΩ antara pin Data dan VCC.
+1. **Pull-Up Resistor DS18B20**: Pin data DQ sensor DS18B20 (GPIO 4) memerlukan resistor pull-up **4,7 kΩ** yang dihubungkan ke **3,3V** agar komunikasi OneWire berjalan stabil.
 2. **Karakteristik ADC ESP32**: Pin ADC ESP32 memiliki rentang tegangan masukan **0V - 3.3V** (resolusi 12-bit: 0 - 4095). Pastikan tegangan output analog dari sensor tidak melebihi 3.3V saat membaca gas konsentrasi tinggi (bisa gunakan pembagi tegangan *voltage divider* jika perlu).
 

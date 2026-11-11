@@ -8,7 +8,7 @@ Sistem ventilasi pintar (*Smart Exhaust Fan*) berbasis Internet of Things (IoT) 
 ## 📌 Fitur Utama
 1. **Pendeteksian Kualitas Udara & Suhu**:
    - Memantau konsentrasi gas berbahaya / kualitas udara menggunakan sensor MQ-135.
-   - Memantau suhu dan kelembaban ruangan menggunakan sensor DHT11/DHT22.
+   - Memantau suhu ruangan menggunakan sensor DS18B20 (OneWire).
 2. **Kontrol Otomatis Exhaust Fan**:
    - Kipas menyala otomatis ketika suhu atau kadar gas melebihi batas aman (*threshold*).
    - Fitur *hysteresis* untuk mencegah kipas mati-nyala secara berulang-ulang (*hunting*).
